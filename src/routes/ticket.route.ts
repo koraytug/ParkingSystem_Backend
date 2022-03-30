@@ -13,6 +13,7 @@ export default class TicketRouter {
         this.appRouter.get("/pay_ticket", this.app.payTicket);
         this.appRouter.get("/get_ticket_state", this.app.getTicketState);
         this.appRouter.get("/set_door_exit", this.app.setDoorExit);
+        this.appRouter.get("/get_free_spaces", this.app.getFreeSpace);
     }
 
 }

@@ -8,4 +8,5 @@ export interface ITicketController {
     payTicket(req: Request, res: Response): Promise<boolean>
     getTicketState(req: Request, res: Response): Promise<string>
     setDoorExit(req: Request, res: Response): Promise<boolean>
+    getFreeSpace(req: Request, res: Response): Promise<string>
 }

@@ -166,7 +166,7 @@ export default class TicketController implements ITicketController {
     public async getTicketState(req: Request, res: Response): Promise<string> {
         try {
             const ticketService: ITicketService = new TicketService();
-            const ticketHelper: ITicketHelper = new TicketHelper();
+            const ticketHelper = new TicketHelper();
 
             if (!req.query || !req.query.barcode) {
                 res.status(400).send({ message: "Content can not be empty!" });
@@ -185,9 +185,11 @@ export default class TicketController implements ITicketController {
             }
 
             if (tickets[0].paid && tickets[0].paid === true) {
+
                 const timeDiff: number = ticketHelper.calculatedPrice(new Date(tickets[0].paymentTime), new Date())
 
                 let result: string = "paid"
+
 
                 if (timeDiff > 0) {
                     result = "unPaid"
@@ -224,6 +226,28 @@ export default class TicketController implements ITicketController {
             res.status(200);
             res.send(true);
             return Promise.resolve(true);
+        } catch (error) {
+            res.status(500).json({ error: error });
+            return Promise.reject(error);
+        }
+    }
+
+    public async getFreeSpace(req: Request, res: Response): Promise<string> {
+        try {
+            const ticketService: ITicketService = new TicketService();
+
+            const tickets: ITicket[] = await ticketService.getFreeSpace();
+
+            if (!tickets || tickets.length === 0) {
+                res.status(200);
+                res.send(JSON.stringify("54"));
+            }
+
+            const freeSpace = 54 - tickets.length;
+
+            res.status(200);
+            res.send(JSON.stringify(freeSpace.toString()));
+            return Promise.resolve(JSON.stringify(freeSpace.toString()));
         } catch (error) {
             res.status(500).json({ error: error });
             return Promise.reject(error);

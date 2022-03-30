@@ -6,4 +6,5 @@ export interface ITicketService {
     updateTicket(ticket: ITicket);
     payTicket(barcode: string, paymentMethod: string)
     setDoorExit(barcode: string)
+    getFreeSpace()
 }
