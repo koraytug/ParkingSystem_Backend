@@ -4,7 +4,6 @@ import { ITicketService } from "./iticket.service";
 
 export default class TicketService implements ITicketService {
     private uri: string = process.env.uri || "";
-    // private dbName = "TESTAPP";
     private dbName = "PARKING";
     private collectionName = "tickets";
 
