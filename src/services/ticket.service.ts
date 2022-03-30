@@ -120,5 +120,23 @@ export default class TicketService implements ITicketService {
         }
     }
 
+    public async getFreeSpace() {
+        try {
+            const client = await new MongoClient(this.uri);
+
+            await client.connect();
+
+            const db = client.db(this.dbName);
+            const items = db.collection(this.collectionName).find({ exit: { $exists: false } });
+            const result = await items.toArray();
+
+            await client.close();
+            return result;
+        } catch (error) {
+            console.log(`Could not fetch customer ${error}`);
+            throw error;
+        }
+    }
+
 }
 
