@@ -23,7 +23,6 @@ export default class TicketController implements ITicketController {
                 .random() * (maxm - minm + 1)) + minm).toString();
 
             const barcode: string = randomNumber;
-            console.log("barcode", barcode);
 
             const ticket: ITicket = {
                 entranceDate: new Date().toLocaleString(),
@@ -32,13 +31,13 @@ export default class TicketController implements ITicketController {
 
             const ticketId = await customerService.createTicket(ticket);
 
-
-            console.log("ticket_ID", ticketId);
             if (!ticketId) {
                 res.status(204).json("There is an error while getting the customerID!");
                 return Promise.resolve(ticketId);
             }
 
+
+            console.log("Generated Barcode: ", barcode);
             res.status(200).json({
                 status: 'succes',
                 data: ticket,
@@ -54,7 +53,7 @@ export default class TicketController implements ITicketController {
     public async getCalculatedPrice(req: Request, res: Response): Promise<ITicket> {
         try {
             const ticketService: ITicketService = new TicketService();
-            const ticketHelper = new TicketHelper();
+            const ticketHelper: ITicketHelper = new TicketHelper();
 
             if (!req.query || !req.query.barcode) {
                 res.status(400).send({ message: "Content can not be empty!" });
@@ -79,6 +78,9 @@ export default class TicketController implements ITicketController {
                     calculationTime: tickets[0].calculationTime,
                     price: priceDiff,
                 }
+
+                console.log("Price is: ", priceDiff);
+
                 res.status(200);
                 res.send(ticketCalculation);
                 return Promise.resolve(ticketCalculation);
@@ -106,6 +108,8 @@ export default class TicketController implements ITicketController {
                 return Promise.reject("Ticket could not updated");
             }
 
+            console.log("Price is: ", ticketCalculation.price);
+
             res.status(200);
             res.send(ticketCalculation);
             return Promise.resolve(ticketCalculation);
@@ -128,7 +132,6 @@ export default class TicketController implements ITicketController {
             if (!tickets || tickets.length === 0) {
                 res.status(404).json("There is no ticket!");
             }
-            console.log("ticket ", tickets[0]);
 
             res.status(200);
             res.send(tickets[0]);
@@ -153,6 +156,7 @@ export default class TicketController implements ITicketController {
                 res.status(404).json("Ticket could not set paid!");
             }
 
+            console.log("Ticket paid succesfully!")
             res.status(200);
             res.send(true);
             return Promise.resolve(true);
@@ -161,7 +165,6 @@ export default class TicketController implements ITicketController {
             return Promise.reject(error);
         }
     }
-
 
     public async getTicketState(req: Request, res: Response): Promise<string> {
         try {
@@ -179,6 +182,8 @@ export default class TicketController implements ITicketController {
             }
 
             if (tickets[0].paid === false) {
+                console.log("Ticket is unPaid!")
+
                 res.status(200);
                 res.send(JSON.stringify("unPaid"));
                 return Promise.resolve(JSON.stringify("unPaid"));
@@ -195,11 +200,14 @@ export default class TicketController implements ITicketController {
                     result = "unPaid"
                 }
 
+                console.log(`Ticket is ${result}!`)
+
                 res.status(200);
                 res.send(JSON.stringify(result));
                 return Promise.resolve(JSON.stringify(result));
             }
 
+            console.log("Ticket is paid!")
             res.status(200);
             res.send(JSON.stringify("paid"));
             return Promise.resolve(JSON.stringify("paid"));
@@ -223,6 +231,7 @@ export default class TicketController implements ITicketController {
                 res.status(404).json("Exit could not set!");
             }
 
+            console.log("Exit succesfully!")
             res.status(200);
             res.send(true);
             return Promise.resolve(true);
@@ -245,6 +254,7 @@ export default class TicketController implements ITicketController {
 
             const freeSpace = 54 - tickets.length;
 
+            console.log(`There are ${freeSpace} free spaces!`)
             res.status(200);
             res.send(JSON.stringify(freeSpace.toString()));
             return Promise.resolve(JSON.stringify(freeSpace.toString()));
