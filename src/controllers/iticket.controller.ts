@@ -6,4 +6,6 @@ export interface ITicketController {
     getCalculatedPrice(req: Request, res: Response): Promise<ITicket>
     findTicket(req: Request, res: Response): Promise<ITicket>
     payTicket(req: Request, res: Response): Promise<boolean>
+    getTicketState(req: Request, res: Response): Promise<string>
+    setDoorExit(req: Request, res: Response): Promise<boolean>
 }

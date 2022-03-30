@@ -12,7 +12,7 @@ export default class TicketService implements ITicketService {
             const client = await new MongoClient(this.uri);
             await client.connect();
             const db = client.db(this.dbName);
-            const addedItem = await db.collection("tickets").insertOne(customer);
+            const addedItem = await db.collection(this.collectionName).insertOne(customer);
             const insertedId = (await addedItem).insertedId.toString();
             await client.close();
             return insertedId;
@@ -95,7 +95,30 @@ export default class TicketService implements ITicketService {
         }
     }
 
+    public async setDoorExit(barcode: string) {
+        try {
+            const client = await new MongoClient(this.uri);
+            await client.connect();
+            const db = client.db(this.dbName);
 
+            // upsert creates new record when it can not find the record
+            const updatedItem = await db.collection(this.collectionName)
+                .findOneAndUpdate({ ticketBarcode: barcode }, {
+                    $set:
+                    {
+                        exit: true,
+                        exitTime: new Date().toLocaleString()
+                    }
+                }, { upsert: true });
+
+            const updateStatus = (updatedItem.ok === 1) ? true : false;
+            await client.close();
+            return updateStatus;
+        } catch (error) {
+            console.log(`Could not update the ticket ${error}`);
+            throw error;
+        }
+    }
 
 }
 

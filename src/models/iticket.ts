@@ -5,5 +5,7 @@ export interface ITicket {
     calculatedPrice?: number,
     paid?: boolean,
     paymentTime?: string,
-    paymentMethod?: string
+    paymentMethod?: string,
+    exit?: boolean,
+    exitTime?: string
 }
