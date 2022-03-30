@@ -21,7 +21,7 @@ lib
 .python_packages/
 
 # Python Environments
-.env
+# .env
 .venv
 env/
 venv/
