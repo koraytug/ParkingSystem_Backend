@@ -9,6 +9,8 @@ export default class TicketRouter {
     constructor() {
         this.appRouter.get("/get_new_ticket", this.app.getNewTicket);
         this.appRouter.get("/get_calculated_price", this.app.getCalculatedPrice);
+        this.appRouter.get("/find_ticket", this.app.findTicket);
+        this.appRouter.get("/pay_ticket", this.app.payTicket);
     }
 
 }

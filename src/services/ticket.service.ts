@@ -41,6 +41,60 @@ export default class TicketService implements ITicketService {
         }
     }
 
+    public async updateTicket(ticket: ITicket) {
+        try {
+            const client = await new MongoClient(this.uri);
+            await client.connect();
+            const db = client.db(this.dbName);
+
+            // upsert creates new record when it can not find the record
+            const updatedItem = await db.collection(this.collectionName)
+                .findOneAndUpdate({ ticketBarcode: ticket.ticketBarcode }, {
+                    $set:
+                    {
+                        entranceDate: ticket.entranceDate,
+                        ticketBarcode: ticket.ticketBarcode,
+                        calculationTime: ticket.calculationTime,
+                        calculatedPrice: ticket.calculatedPrice,
+                    }
+                }, { upsert: true });
+
+            const updateStatus = (updatedItem.ok === 1) ? true : false;
+            await client.close();
+            return updateStatus;
+        } catch (error) {
+            console.log(`Could not update the ticket ${error}`);
+            throw error;
+        }
+    }
+
+    public async payTicket(barcode: string, paymentMethod: string) {
+        try {
+            const client = await new MongoClient(this.uri);
+            await client.connect();
+            const db = client.db(this.dbName);
+
+            // upsert creates new record when it can not find the record
+            const updatedItem = await db.collection(this.collectionName)
+                .findOneAndUpdate({ ticketBarcode: barcode }, {
+                    $set:
+                    {
+                        paid: true,
+                        ticketBarcode: barcode,
+                        paymentTime: new Date().toLocaleString(),
+                        paymentMethod: paymentMethod
+                    }
+                }, { upsert: true });
+
+            const updateStatus = (updatedItem.ok === 1) ? true : false;
+            await client.close();
+            return updateStatus;
+        } catch (error) {
+            console.log(`Could not update the ticket ${error}`);
+            throw error;
+        }
+    }
+
 
 
 }
