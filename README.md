@@ -1,6 +1,6 @@
-# Parking Lot NodeJs backend example for Platogo
+# Parking Lot NodeJs backend example
 
-this project has been developed for backend part of Parking Lot codding challenge.
+this project has been developed for backend part of Parking Lot .
 
 ## Installation and Setup Instructions
 
